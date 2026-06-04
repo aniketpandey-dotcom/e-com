@@ -1,14 +1,11 @@
 import type { Metadata } from "next";
-import { Inter, Geist_Mono } from "next/font/google";
+import { Inter, Geist_Mono, Geist } from "next/font/google";
 import "./globals.css";
+import Header from "@/components/Header";
 import Breadcrumb from "@/components/Breadcrumb";
-import CartIndicator from "@/components/CartIndicator";
-import { CartProvider } from "@/contexts/CartContext";
 
-// next/font/google — downloads fonts at build time and self-hosts them.
-// Benefits: no external requests, no layout shift (FOUT), privacy-friendly.
-const inter = Inter({
-  variable: "--font-inter",
+const geistSans = Geist({
+  variable: "--font-geist-sans",
   subsets: ["latin"],
   display: "swap", // Show fallback font immediately, swap when Inter loads
 });
@@ -79,18 +76,18 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col font-sans">
-        <CartProvider>
-          <header className="w-full border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-black">
-            <div className="max-w-5xl mx-auto px-8 py-3 flex items-center justify-between">
-              <Breadcrumb />
-              <CartIndicator />
-            </div>
-          </header>
-          {children}
-        </CartProvider>
+      <body className="min-h-full flex flex-col">
+        <header className="z-10">
+          <Header></Header>
+        </header>
+        <div className="mt-[60]">
+          {" "}
+          <Breadcrumb></Breadcrumb>
+        </div>
+
+        <main>{children}</main>
       </body>
     </html>
   );
