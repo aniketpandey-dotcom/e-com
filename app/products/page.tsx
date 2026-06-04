@@ -1,20 +1,26 @@
-import ProductList from "@/components/ProductList";
+import ProductCard from "@/components/ProductCard";
 
-// This page is a SERVER component — no "use client" directive.
-// It delegates data fetching to ProductList (also a server component).
-// The only JavaScript sent to the browser is from AddToCartButton (client component).
-export default function ProductsPage() {
+const ProductPage = async () => {
+  const response = await fetch("https://dummyjson.com/products");
+
+  const data = await response.json();
+  console.log(data);
+
   return (
-    <main className="w-full py-16 px-8 bg-white dark:bg-black">
-      <h1 className="text-3xl font-semibold tracking-tight text-black dark:text-zinc-50 mb-2">
-        Products
-      </h1>
-      <p className="text-zinc-500 dark:text-zinc-400 mb-8">
-        Browse our collection. Check your terminal for server-side logs.
-      </p>
-
-      {/* ProductList is a Server Component — fetches data on the server */}
-      <ProductList />
-    </main>
+    <div className="grid grid-cols-1 gap-6 p-6 md:grid-cols-2 lg:grid-cols-4">
+      {data.products.map((product: any) => (
+        <ProductCard
+          id={product.id}
+          key={product.id}
+          image={product.thumbnail}
+          title={product.title}
+          description={product.description}
+          price={product.price}
+          rating={product.rating}
+        />
+      ))}
+    </div>
   );
-}
+};
+
+export default ProductPage;
