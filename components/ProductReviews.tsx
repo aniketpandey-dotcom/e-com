@@ -7,11 +7,13 @@ interface ProductReviewsProps {
 // SERVER component — fetches reviews on the server
 // This component is intentionally separate so it can be wrapped in <Suspense>
 // allowing the product details to render immediately while reviews load
-export default async function ProductReviews({ productId }: ProductReviewsProps) {
+export default async function ProductReviews({
+  productId,
+}: ProductReviewsProps) {
   const reviews = await getProductReviews(productId);
 
   console.log(
-    `[SERVER] ProductReviews rendered with ${reviews.length} reviews for product ${productId}`
+    `[SERVER] ProductReviews rendered with ${reviews.length} reviews for product ${productId}`,
   );
 
   if (reviews.length === 0) {

@@ -74,14 +74,19 @@ function mapProduct(p: DummyJsonProduct): Product {
 export async function getProducts(): Promise<Product[]> {
   console.log(`[SERVER] Fetching all products at ${new Date().toISOString()}`);
 
-  const res = await fetch(`${API_BASE}/products?limit=12&select=id,title,price,description,category,stock,thumbnail,rating`, {
-    // force-cache: response is cached indefinitely until revalidated
-    // This is the default in Next.js, shown explicitly for learning
-    cache: "force-cache",
-  });
+  const res = await fetch(
+    `${API_BASE}/products?limit=12&select=id,title,price,description,category,stock,thumbnail,rating`,
+    {
+      // force-cache: response is cached indefinitely until revalidated
+      // This is the default in Next.js, shown explicitly for learning
+      cache: "force-cache",
+    },
+  );
 
   if (!res.ok) {
-    throw new Error(`Failed to fetch products: ${res.status} ${res.statusText}`);
+    throw new Error(
+      `Failed to fetch products: ${res.status} ${res.statusText}`,
+    );
   }
 
   const data: DummyJsonProductsResponse = await res.json();
@@ -90,7 +95,9 @@ export async function getProducts(): Promise<Product[]> {
 
 // Fetch a single product — uses time-based revalidation (ISR)
 export async function getProductById(id: string): Promise<Product | undefined> {
-  console.log(`[SERVER] Fetching product id=${id} at ${new Date().toISOString()}`);
+  console.log(
+    `[SERVER] Fetching product id=${id} at ${new Date().toISOString()}`,
+  );
 
   const res = await fetch(`${API_BASE}/products/${id}`, {
     // Revalidate every 3600 seconds (1 hour) — ISR pattern
@@ -99,7 +106,9 @@ export async function getProductById(id: string): Promise<Product | undefined> {
 
   if (res.status === 404) return undefined;
   if (!res.ok) {
-    throw new Error(`Failed to fetch product ${id}: ${res.status} ${res.statusText}`);
+    throw new Error(
+      `Failed to fetch product ${id}: ${res.status} ${res.statusText}`,
+    );
   }
 
   const data: DummyJsonProduct = await res.json();
@@ -108,7 +117,9 @@ export async function getProductById(id: string): Promise<Product | undefined> {
 
 // Fetch reviews for a product — uses no-store (always fresh, SSR)
 export async function getProductReviews(id: string): Promise<Review[]> {
-  console.log(`[SERVER] Fetching reviews for product id=${id} at ${new Date().toISOString()}`);
+  console.log(
+    `[SERVER] Fetching reviews for product id=${id} at ${new Date().toISOString()}`,
+  );
 
   const res = await fetch(`${API_BASE}/products/${id}?select=reviews`, {
     // no-store: never cache, always fetch fresh data (SSR)
@@ -145,3 +156,32 @@ export async function getProductWithReviews(id: string): Promise<{
 
   return { product, reviews };
 }
+
+export const products = [
+  {
+    id: 1,
+    name: "iPhone 15",
+    price: 80000,
+    category: "Mobile",
+  },
+  {
+    id: 2,
+    name: "MacBook Air",
+    price: 120000,
+    category: "Laptop",
+  },
+  {
+    id: 3,
+    name: "AirPods Pro",
+    price: 25000,
+    category: "Accessories",
+  },
+];
+
+export interface CartItem {
+  id: number;
+  productId: number;
+  quantity: number;
+}
+
+export const cart: CartItem[] = [];

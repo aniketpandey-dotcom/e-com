@@ -12,7 +12,7 @@ export default async function ProductList() {
 
   // This log appears in the SERVER terminal (check your terminal, not browser devtools)
   console.log(
-    `[SERVER] ProductList rendered with ${products.length} products at ${new Date().toISOString()}`
+    `[SERVER] ProductList rendered with ${products.length} products at ${new Date().toISOString()}`,
   );
 
   return (
