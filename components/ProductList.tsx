@@ -20,7 +20,7 @@ export default async function ProductList() {
   return (
     <div className="grid gap-4">
       {products.map((product) => (
-        <ProductCard key={product.id} product={product} />
+        <ProductCardComponent key={product.id} product={product} />
       ))}
     </div>
   );
