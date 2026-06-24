@@ -3,6 +3,7 @@ import { Inter, Geist_Mono, Geist } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import Breadcrumb from "@/components/Breadcrumb";
+import { QueryProvider } from "@/providers/query-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -79,15 +80,17 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <header className="z-10">
-          <Header></Header>
-        </header>
-        <div className="mt-[60]">
-          {" "}
-          <Breadcrumb></Breadcrumb>
-        </div>
+        <QueryProvider>
+          <header className="z-10">
+            <Header></Header>
+          </header>
+          <div className="mt-[60]">
+            {" "}
+            <Breadcrumb></Breadcrumb>
+          </div>
 
-        <main>{children}</main>
+          <main> {children}</main>
+        </QueryProvider>
       </body>
     </html>
   );

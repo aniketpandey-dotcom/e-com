@@ -8,7 +8,8 @@ type ProductCardProps = {
 };
 import Image from "next/image";
 import Link from "next/link";
-import Button from "./Button";
+import Button from "./AddToCartButton";
+import AddToCartButton from "./AddToCartButton";
 const ProductCard = ({
   id,
   image,
@@ -43,7 +44,17 @@ const ProductCard = ({
         <div className="flex items-center justify-between">
           <span className="text-2xl font-bold text-green-600">${price}</span>
 
-          <Button>Add to Cart</Button>
+          <AddToCartButton
+            product={{
+              id,
+              image,
+              title,
+              description,
+              price,
+              rating,
+              thumbnail: image,
+            }}
+          />
         </div>
       </div>
     </div>

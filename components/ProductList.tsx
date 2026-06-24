@@ -1,6 +1,8 @@
 import { getProducts } from "@/lib/products";
 import ProductCard from "@/components/ProductCard";
 
+const ProductCardComponent = ProductCard as any;
+
 // SERVER component — no "use client" directive
 // This entire component runs on the server:
 //   - console.log appears in the terminal, NOT in the browser

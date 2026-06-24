@@ -1,38 +1,62 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
-import Button from "./Button";
+import Button from "./AddToCartButton";
+import ProductGallery from "./ProductGallery";
+import cloudinaryLoader from "@/lib/cloudinary";
+import AddToCartButton from "./AddToCartButton";
 
 type Props = {
   product: any;
 };
 
 export default function ProductDetailPage({ product }: Props) {
+  const [selectedImage, setSelectedImage] = useState(
+    product.thumbnail || product.images[0],
+  );
+
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8">
-      <div className="grid gap-10 md:grid-cols-2">
-        {/* Product Image */}
-        <div className="rounded-xl border bg-white p-6 shadow-sm">
-          <Image
-            src={product.thumbnail}
-            alt={product.title}
-            width={500}
-            height={500}
-            className="mx-auto h-[450px] w-full object-contain"
-          />
+    <div className="mx-auto max-w-7xl px-4 py-10">
+      <div className="grid gap-10 lg:grid-cols-2">
+        {/* LEFT SIDE */}
+        <div className="flex gap-4">
+          <div className="relative flex-1 overflow-hidden rounded-2xl border bg-white p-6 shadow-sm">
+            <Image
+              loader={cloudinaryLoader}
+              key={selectedImage}
+              src={selectedImage}
+              alt={product.title}
+              width={600}
+              height={600}
+              priority
+              placeholder="blur"
+              blurDataURL="data:image/gif;base64,R0lGODlhAQABAAAAACw="
+              className="
+    h-[500px]
+    w-full
+    object-contain
+    transition-transform
+    duration-300
+    hover:scale-105
+  "
+            />
+          </div>
         </div>
 
-        {/* Product Info */}
+        {/* RIGHT SIDE */}
         <div>
-          <span className="rounded-full bg-gray-100 px-3 py-1 text-sm">
+          <span className="rounded-full bg-gray-100 px-4 py-1 text-sm capitalize">
             {product.category}
           </span>
 
           <h1 className="mt-4 text-4xl font-bold">{product.title}</h1>
 
-          <div className="mt-3 flex items-center gap-2">
-            <span className="text-yellow-500">⭐</span>
-            <span>{product.rating}</span>
+          <div className="mt-4 flex items-center gap-3">
+            <span className="text-yellow-500">⭐ {product.rating}</span>
+
             <span className="text-gray-500">
-              ({product.reviews?.length} Reviews)
+              ({product.reviews?.length} reviews)
             </span>
           </div>
 
@@ -41,14 +65,14 @@ export default function ProductDetailPage({ product }: Props) {
               ${product.price}
             </p>
 
-            <p className="mt-1 text-sm text-green-600">
+            <p className="mt-1 text-sm text-red-500">
               {product.discountPercentage}% OFF
             </p>
           </div>
 
-          <p className="mt-6 text-gray-700">{product.description}</p>
+          <p className="mt-6 leading-7 text-gray-700">{product.description}</p>
 
-          <div className="mt-6 space-y-2 text-sm">
+          <div className="mt-8 space-y-3 text-sm">
             <p>
               <strong>Brand:</strong> {product.brand}
             </p>
@@ -58,52 +82,46 @@ export default function ProductDetailPage({ product }: Props) {
             </p>
 
             <p>
-              <strong>Stock:</strong>{" "}
+              <strong>Status:</strong>{" "}
               <span className="font-medium text-green-600">
-                {product.stock} Available
+                {product.availabilityStatus}
               </span>
             </p>
 
             <p>
-              <strong>Status:</strong> {product.availabilityStatus}
+              <strong>Stock:</strong> {product.stock} available
             </p>
           </div>
 
           <div className="mt-8 flex gap-4">
-            <Button>Add to Cart</Button>
+            <AddToCartButton product={product} />
 
-            <button className="rounded-lg border border-gray-300 px-6 py-3 font-medium hover:bg-gray-100">
+            <button className="rounded-lg border px-6 py-3 font-medium transition hover:bg-gray-100">
               Buy Now
             </button>
+          </div>
+
+          <div className="mt-8 rounded-xl bg-gray-50 p-4 text-sm">
+            <p>🚚 {product.shippingInformation}</p>
+
+            <p className="mt-2">🛡️ {product.warrantyInformation}</p>
+
+            <p className="mt-2">↩️ {product.returnPolicy}</p>
           </div>
         </div>
       </div>
 
-      {/* Extra Info */}
-      <div className="mt-10 grid gap-4 md:grid-cols-3">
-        <div className="rounded-xl border p-4">
-          <h3 className="font-semibold">Shipping</h3>
-          <p className="mt-2 text-sm text-gray-600">
-            {product.shippingInformation}
-          </p>
-        </div>
-
-        <div className="rounded-xl border p-4">
-          <h3 className="font-semibold">Warranty</h3>
-          <p className="mt-2 text-sm text-gray-600">
-            {product.warrantyInformation}
-          </p>
-        </div>
-
-        <div className="rounded-xl border p-4">
-          <h3 className="font-semibold">Returns</h3>
-          <p className="mt-2 text-sm text-gray-600">{product.returnPolicy}</p>
-        </div>
+      {/* SPECIFICATIONS */}
+      <div className="p-4 m-4">
+        <ProductGallery
+          images={product.images}
+          selectedImage={selectedImage}
+          onSelect={setSelectedImage}
+        />
       </div>
 
-      {/* Specifications */}
-      <div className="mt-10 rounded-xl border p-6">
-        <h2 className="mb-4 text-2xl font-bold">Product Specifications</h2>
+      <div className="mt-12 rounded-2xl border p-6">
+        <h2 className="mb-6 text-2xl font-bold">Product Specifications</h2>
 
         <div className="grid gap-4 md:grid-cols-2">
           <p>
@@ -132,23 +150,33 @@ export default function ProductDetailPage({ product }: Props) {
         </div>
       </div>
 
-      {/* Reviews */}
-      <div className="mt-10">
+      {/* REVIEWS */}
+
+      <div className="mt-12">
         <h2 className="mb-6 text-2xl font-bold">Customer Reviews</h2>
 
         <div className="space-y-4">
           {product.reviews?.map((review: any, index: number) => (
-            <div key={index} className="rounded-xl border p-4">
+            <div
+              key={index}
+              className="
+                  rounded-xl
+                  border
+                  p-5
+                  transition
+                  hover:shadow-md
+                "
+            >
               <div className="flex items-center justify-between">
                 <h3 className="font-semibold">{review.reviewerName}</h3>
 
                 <span>⭐ {review.rating}</span>
               </div>
 
-              <p className="mt-2 text-gray-700">{review.comment}</p>
+              <p className="mt-3 text-gray-700">{review.comment}</p>
 
               <p className="mt-2 text-sm text-gray-500">
-                {new Date(review.date).toLocaleDateString()}
+                {new Date(review.date).toLocaleDateString("en-US")}
               </p>
             </div>
           ))}

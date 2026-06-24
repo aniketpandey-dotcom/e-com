@@ -1,44 +1,52 @@
 "use client";
 
-import { useCart } from "@/contexts/CartContext";
+import { useCartStore, useCartItem } from "@/stores/cart-store";
 
-interface AddToCartButtonProps {
-  productId: string;
-  productName: string;
-  price: number;
-}
+export default function AddToCartButton({ product }: any) {
+  const addItem = useCartStore((state) => state.addItem);
+  const updateQuantity = useCartStore((state) => state.updateQuantity);
 
-// This is a CLIENT component — it ships JavaScript to the browser
-// because it needs interactivity (onClick, useCart context)
-export default function AddToCartButton({
-  productId,
-  productName,
-  price,
-}: AddToCartButtonProps) {
-  const { addItem, items } = useCart();
+  const cartItem = useCartItem(product.id.toString());
 
-  const itemInCart = items.find((item) => item.productId === productId);
-  const quantity = itemInCart?.quantity ?? 0;
+  if (cartItem) {
+    return (
+      <div className="flex items-center justify-between rounded-lg border border-gray-300 overflow-hidden">
+        <button
+          className="px-4 py-2 hover:bg-gray-100"
+          onClick={() =>
+            updateQuantity(cartItem.productId, cartItem.quantity - 1)
+          }
+        >
+          −
+        </button>
 
-  function handleAddToCart() {
-    // This console.log appears in the BROWSER console, NOT the server terminal
-    console.log(`[CLIENT] Adding "${productName}" to cart`);
-    addItem({ productId, name: productName, price, quantity: 1 });
+        <span className="px-4 font-semibold">{cartItem.quantity}</span>
+
+        <button
+          className="px-4 py-2 hover:bg-gray-100"
+          onClick={() =>
+            updateQuantity(cartItem.productId, cartItem.quantity + 1)
+          }
+        >
+          +
+        </button>
+      </div>
+    );
   }
 
   return (
-    <div className="flex items-center gap-3">
-      <button
-        onClick={handleAddToCart}
-        className="flex h-12 items-center justify-center rounded-full bg-foreground px-8 text-background font-medium transition-colors hover:bg-zinc-700 dark:hover:bg-zinc-300"
-      >
-        Add to Cart
-      </button>
-      {quantity > 0 && (
-        <span className="text-sm text-zinc-500 dark:text-zinc-400">
-          ({quantity} in cart)
-        </span>
-      )}
-    </div>
+    <button
+      onClick={() =>
+        addItem({
+          productId: product.id.toString(),
+          name: product.title,
+          price: product.price,
+          thumbnail: product.thumbnail,
+        })
+      }
+      className="rounded-lg bg-blue-600 px-4 py-3 text-white font-semibold hover:bg-blue-700"
+    >
+      Add to Cart
+    </button>
   );
 }
