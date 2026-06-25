@@ -16,7 +16,7 @@ export default async function ProductsPage({ searchParams }: Props) {
   const page = params.page || "1";
 
   const res = await fetch(
-    `http://localhost:3000/api/products?query=${query}&page=${page}`,
+    `${process.env.APP_URL}/api/products?query=${query}&page=${page}`,
     {
       cache: "no-store",
     },
