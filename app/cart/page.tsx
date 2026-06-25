@@ -1,8 +1,11 @@
 "use client";
 
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useCartStore, useCartTotal } from "@/stores/cart-store";
 
 export default function CartPage() {
+  const router = useRouter();
   const items = useCartStore((state) => state.items);
   const removeItem = useCartStore((state) => state.removeItem);
   const updateQuantity = useCartStore((state) => state.updateQuantity);
@@ -41,7 +44,9 @@ export default function CartPage() {
             key={item.productId}
             className="flex items-center gap-4 rounded-xl border p-4 shadow-sm"
           >
-            <img
+            <Image
+              width={100}
+              height={100}
               src={item.thumbnail}
               alt={item.name}
               className="h-24 w-24 rounded-lg object-cover"
@@ -97,7 +102,10 @@ export default function CartPage() {
           <span>₹{total.toFixed(2)}</span>
         </div>
 
-        <button className="mt-4 w-full rounded-lg bg-blue-600 py-3 font-semibold text-white hover:bg-blue-700">
+        <button
+          className="mt-4 w-full rounded-lg bg-blue-600 py-3 font-semibold text-white hover:bg-blue-700"
+          onClick={() => router.push("/checkout")}
+        >
           Proceed to Checkout
         </button>
       </div>

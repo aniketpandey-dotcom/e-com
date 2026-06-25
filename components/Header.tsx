@@ -26,11 +26,12 @@ const Header = () => {
           <ProductSearch></ProductSearch>
         </div>
 
-        <Link href="/tip-calculator">Tip Calculator</Link>
+        <Link href="/tip-calculator">tipCalculator</Link>
 
-        <Link href="/language-switcher">Language Switcher</Link>
+        <Link href="/language-switcher">languageSwitcher</Link>
         <Link href="/status">Status</Link>
         <Link href="/todos">Todos</Link>
+        <Link href="/query-params">queryParams</Link>
       </div>
     </nav>
   );

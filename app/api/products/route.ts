@@ -1,45 +1,30 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { products } from "@/lib/products";
-// const products = [
-//   {
-//     id: 1,
-//     name: "iPhone 15",
-//     price: 80000,
-//     category: "Mobile",
-//   },
-//   {
-//     id: 2,
-//     name: "MacBook Air",
-//     price: 120000,
-//     category: "Laptop",
-//   },
-//   {
-//     id: 3,
-//     name: "AirPods Pro",
-//     price: 25000,
-//     category: "Accessories",
-//   },
-// ];
 
-export async function GET(request: NextRequest) {
+export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
 
-  const limit = searchParams.get("limit");
+  const query = searchParams.get("query")?.toLowerCase() || "";
 
-  let result = products;
+  const page = Number(searchParams.get("page") || "1");
 
-  if (limit) {
-    result = products.slice(0, Number(limit));
-  }
+  const limit = 6;
 
-  return NextResponse.json(
-    {
-      success: true,
-      count: result.length,
-      data: result,
-    },
-    {
-      status: 200,
-    },
+  const filteredProducts = products.filter(
+    (product) =>
+      product.name.toLowerCase().includes(query) ||
+      product.category.toLowerCase().includes(query),
   );
+
+  const totalPages = Math.ceil(filteredProducts.length / limit);
+
+  const start = (page - 1) * limit;
+
+  const paginatedProducts = filteredProducts.slice(start, start + limit);
+
+  return NextResponse.json({
+    products: paginatedProducts,
+    totalPages,
+    currentPage: page,
+  });
 }
